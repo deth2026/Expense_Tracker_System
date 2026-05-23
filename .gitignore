@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.env
+.env.*
+coverage/
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+
+# TypeScript build info
+*.tsbuildinfo
