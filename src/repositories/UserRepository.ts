@@ -1,16 +1,9 @@
-import { Repository } from 'typeorm';
-import AppDataSource from '../config/Database';
 import { UserEntity } from '../entities';
+import { BaseRepository } from './BaseRepository';
 
-export class UserRepository {
-  private readonly repository: Repository<UserEntity>;
-
+export class UserRepository extends BaseRepository<UserEntity> {
   constructor() {
-    this.repository = AppDataSource.getRepository(UserEntity);
-  }
-
-  async findById(id: string): Promise<UserEntity | null> {
-    return this.repository.findOne({ where: { id } });
+    super(UserEntity);
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -18,8 +11,7 @@ export class UserRepository {
   }
 
   async createAndSave(payload: Partial<UserEntity>): Promise<UserEntity> {
-    const user = this.repository.create(payload);
-    return this.repository.save(user);
+    return this.create(payload);
   }
 
   async save(user: UserEntity): Promise<UserEntity> {

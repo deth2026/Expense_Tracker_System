@@ -4,6 +4,7 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { BudgetEntity } from './BudgetEntity';
 import { ExpenseEntity } from './ExpenseEntity';
@@ -41,6 +42,14 @@ export class UserEntity {
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updatedAt!: Date;
 
   @OneToMany(() => ExpenseEntity, (expense) => expense.user)
   expenses!: ExpenseEntity[];

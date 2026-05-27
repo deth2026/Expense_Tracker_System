@@ -88,6 +88,21 @@ npm run build
 - `POST /api/auth/admin/login`
 - `GET /api/auth/me`
 
+### Users
+
+#### User
+
+- `GET /api/users/profile`
+- `PUT /api/users/profile`
+- `PUT /api/users/change-password`
+- `DELETE /api/users/profile`
+
+#### Admin
+
+- `GET /api/admin/profile`
+- `GET /api/users`
+- `GET /api/users/:id`
+
 ## Example Request Bodies
 
 ### Register
@@ -132,4 +147,4 @@ The API will start on `http://localhost:3000`.
 - Current auth routes are wired and working with JWT.
 - TypeORM entities are configured in `src/entities`.
 - Database connection is configured in `src/config/Database.ts`.
-- Authentication service is still using the in-memory repository unless you switch it to TypeORM-backed repositories.
+- Authentication and user management now use the shared TypeORM-backed user repository.
