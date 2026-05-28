@@ -88,6 +88,14 @@ npm run build
 - `POST /api/auth/admin/login`
 - `GET /api/auth/me`
 
+### Income
+
+- `POST /api/incomes` — add salary/income
+- `GET /api/incomes` — view all income entries for the logged-in user
+- `GET /api/incomes/:id` — view one income entry
+- `PUT /api/incomes/:id` — update an income entry
+- `DELETE /api/incomes/:id` — delete an income entry
+
 ### Users
 
 #### User
