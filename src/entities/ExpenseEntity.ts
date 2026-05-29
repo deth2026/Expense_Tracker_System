@@ -38,6 +38,7 @@ export class ExpenseEntity {
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
+    precision: 0,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
