@@ -27,6 +27,17 @@ export class IncomeRepository extends BaseRepository<IncomeEntity> {
     return Number(result?.total ?? 0);
   }
 
+  async sumByUserIdByDateRange(userId: string, start: Date, end: Date): Promise<number> {
+    const result = await this.repository
+      .createQueryBuilder('income')
+      .select('COALESCE(SUM(income.amount), 0)', 'total')
+      .where('income.user_id = :userId', { userId })
+      .andWhere('income.created_at BETWEEN :start AND :end', { start, end })
+      .getRawOne<{ total: string | number | null }>();
+
+    return Number(result?.total ?? 0);
+  }
+
   async save(income: IncomeEntity): Promise<IncomeEntity> {
     return this.repository.save(income);
   }

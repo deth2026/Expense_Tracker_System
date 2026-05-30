@@ -47,6 +47,53 @@ export class ExpenseRepository extends BaseRepository<ExpenseEntity> {
     return Number(result?.total ?? 0);
   }
 
+  async sumByUserIdByDateRange(userId: string, start: Date, end: Date): Promise<number> {
+    const result = await this.repository
+      .createQueryBuilder('expense')
+      .select('COALESCE(SUM(expense.amount), 0)', 'total')
+      .where('expense.user_id = :userId', { userId })
+      .andWhere('expense.transaction_date BETWEEN :start AND :end', { start, end })
+      .getRawOne<{ total: string | number | null }>();
+
+    return Number(result?.total ?? 0);
+  }
+
+  async getCategoryBreakdownByUserId(
+    userId: string,
+    start?: Date,
+    end?: Date,
+  ): Promise<Array<{ categoryId: string; categoryName: string; total: number }>> {
+    const queryBuilder = this.repository
+      .createQueryBuilder('expense')
+      .leftJoin('expense.category', 'category')
+      .select('category.id', 'categoryId')
+      .addSelect('category.name', 'categoryName')
+      .addSelect('COALESCE(SUM(expense.amount), 0)', 'total')
+      .where('expense.user_id = :userId', { userId });
+
+    if (start) {
+      queryBuilder.andWhere('expense.transaction_date >= :start', { start });
+    }
+
+    if (end) {
+      queryBuilder.andWhere('expense.transaction_date <= :end', { end });
+    }
+
+    queryBuilder.groupBy('category.id').addGroupBy('category.name').orderBy('total', 'DESC');
+
+    const rows = await queryBuilder.getRawMany<{
+      categoryId: string;
+      categoryName: string;
+      total: string | number;
+    }>();
+
+    return rows.map((row) => ({
+      categoryId: row.categoryId,
+      categoryName: row.categoryName,
+      total: Number(row.total ?? 0),
+    }));
+  }
+
   async save(expense: ExpenseEntity): Promise<ExpenseEntity> {
     return this.repository.save(expense);
   }
