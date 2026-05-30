@@ -47,6 +47,49 @@ export class ExpenseRepository extends BaseRepository<ExpenseEntity> {
     return Number(result?.total ?? 0);
   }
 
+  async sumAll(): Promise<number> {
+    const result = await this.repository
+      .createQueryBuilder('expense')
+      .select('COALESCE(SUM(expense.amount), 0)', 'total')
+      .getRawOne<{ total: string | number | null }>();
+
+    return Number(result?.total ?? 0);
+  }
+
+  async getTopSpendingCategories(limit = 5): Promise<
+    Array<{
+      categoryId: string;
+      categoryName: string;
+      totalExpense: number;
+      transactionCount: number;
+    }>
+  > {
+    const results = await this.repository
+      .createQueryBuilder('expense')
+      .leftJoin('expense.category', 'category')
+      .select('category.id', 'categoryId')
+      .addSelect('category.name', 'categoryName')
+      .addSelect('COALESCE(SUM(expense.amount), 0)', 'totalExpense')
+      .addSelect('COUNT(expense.id)', 'transactionCount')
+      .groupBy('category.id')
+      .addGroupBy('category.name')
+      .orderBy('totalExpense', 'DESC')
+      .limit(limit)
+      .getRawMany<{
+        categoryId: string;
+        categoryName: string;
+        totalExpense: string | number;
+        transactionCount: string | number;
+      }>();
+
+    return results.map((result) => ({
+      categoryId: result.categoryId,
+      categoryName: result.categoryName,
+      totalExpense: Number(result.totalExpense),
+      transactionCount: Number(result.transactionCount),
+    }));
+  }
+
   async save(expense: ExpenseEntity): Promise<ExpenseEntity> {
     return this.repository.save(expense);
   }

@@ -25,12 +25,7 @@ export class IncomeEntity {
   @Column({ name: 'user_id', type: 'uuid' })
   userId!: string;
 
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamp',
-    precision: 0,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.incomes, {

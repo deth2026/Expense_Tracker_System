@@ -27,6 +27,15 @@ export class IncomeRepository extends BaseRepository<IncomeEntity> {
     return Number(result?.total ?? 0);
   }
 
+  async sumAll(): Promise<number> {
+    const result = await this.repository
+      .createQueryBuilder('income')
+      .select('COALESCE(SUM(income.amount), 0)', 'total')
+      .getRawOne<{ total: string | number | null }>();
+
+    return Number(result?.total ?? 0);
+  }
+
   async save(income: IncomeEntity): Promise<IncomeEntity> {
     return this.repository.save(income);
   }

@@ -13,6 +13,10 @@ export class CategoryRepository {
     return this.repository.find({ order: { createdAt: 'DESC' } });
   }
 
+  async countAll(): Promise<number> {
+    return this.repository.count();
+  }
+
   async findById(id: string): Promise<CategoryEntity | null> {
     return this.repository.findOne({ where: { id } });
   }

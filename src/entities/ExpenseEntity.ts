@@ -35,12 +35,7 @@ export class ExpenseEntity {
   })
   transactionDate!: Date;
 
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamp',
-    precision: 0,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
   @ManyToOne(() => CategoryEntity, (category) => category.expenses, {

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import adminDashboardRoutes from './AdminDashboardRoutes';
 import adminRoutes from './AdminRoutes';
 import authRoutes from './AuthRoutes';
 import categoryRoutes from './CategoryRoutes';
@@ -10,6 +11,7 @@ const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
+router.use('/admin/dashboard', adminDashboardRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/expenses', expenseRoutes);
 router.use('/users', userRoutes);
